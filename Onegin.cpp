@@ -139,7 +139,7 @@ bool line_comp_alphabet (line first, line second)
         second_pos++;
         }
 
-    return true;
+    return first_pos < second_pos;
     }
 
 bool line_comp_rhyme (line first, line second)
