@@ -27,7 +27,7 @@ int main()
 
     load_file ("Onegin.txt", test);
 
-    print_arr (test);
+    //print_arr (test);
 
     size_t time = GetTickCount();
 
@@ -36,9 +36,9 @@ int main()
     time = GetTickCount() - time;
 
     printf ("Sort time: %u\n", time);
-    getch();
+    //getch();
 
-    print_arr (test);
+    //print_arr (test);
 
 
     FILE* onegin = fopen("Onegin_SORT_alph.txt", "w");
@@ -56,7 +56,7 @@ int main()
 
     time = GetTickCount() - time;
 
-    print_arr (test);
+    //print_arr (test);
 
     onegin = fopen("Onegin_SORT_rhyme.txt", "w");
 
@@ -80,7 +80,7 @@ void load_file (char filename[], std :: vector <line>& onegin)
 
         buf.last_symb = strlen(buf.line_);
 
-        printf ("%s\n\tlast position[%u]\n", buf.line_, buf.last_symb);
+        //printf ("%s\n\tlast position[%u]\n", buf.line_, buf.last_symb);
 
         buf.position  = counter;
 
