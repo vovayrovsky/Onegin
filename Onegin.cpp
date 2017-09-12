@@ -1,14 +1,16 @@
 #include "TXLib.h"
 
+#define max_num 128
+
 struct line
     {
-    char line_[40];
+    char line_[max_num];
     size_t position;
     size_t last_symb;
 
     uint8_t operator[] (size_t num)
         {
-        assert (num < 40);
+        assert (num < max_num);
 
         return  line_[num];
         }
@@ -48,21 +50,21 @@ int main()
     fclose(onegin);
 
 
-    printf ("Other Sort!\n\n\n");
+    //printf ("Other Sort!\n\n\n");
 
-    time = GetTickCount();
+    //time = GetTickCount();
 
-    std :: sort (test.begin(), test.end(), line_comp_rhyme);
+    //std :: sort (test.begin(), test.end(), line_comp_rhyme);
 
-    time = GetTickCount() - time;
+    //time = GetTickCount() - time;
 
     //print_arr (test);
 
-    onegin = fopen("Onegin_SORT_rhyme.txt", "w");
+    //onegin = fopen("Onegin_SORT_rhyme.txt", "w");
 
-    print_arr (test, onegin);
+    //print_arr (test, onegin);
 
-    fclose(onegin);
+    //fclose(onegin);
 
     return 0;
     }
@@ -115,7 +117,8 @@ bool line_comp_alphabet (line first, line second)
 
     while (true)
         {
-        if (first_pos > 39 || second_pos > 39)
+        if (first_pos > max_num-1 || second_pos > max_num-1 ||
+            first[first_pos] == 0 || second[second_pos] == 0)
             break;
 
         if (!(isalpha (first[first_pos])))
