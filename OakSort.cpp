@@ -1,36 +1,55 @@
 #include "OakSort.h"
 
-void print_arr (std :: vector <line> onegin, FILE* file = stdout);
+using namespace std;
+
+void print_tree (Node* root, FILE* file);
+void sort_tree  (Node* root);
 
 int main(int argc, char** argv)
     {
+    try {
+
+    FILE* oneg = NULL;
+
     if (argc < 2)
         {
-        printf ("No input file!\n");
-
-        return 0;
+        oneg = fopen("Onegin.txt", "r");
+        assert (oneg);
+        }
+    else
+        {
+        oneg = fopen(argv[1], "r");
+        assert (oneg);
         }
 
     Node root;
 
     root.next = LIST_END_POINTER;
+    root.level = 0;
 
     Node buf;
-    buf.data = new line();
+    buf.data =  new line();
 
-    sprintf (buf.data->line_, "ROOT_DON' T_TOUCH");
-
-    FILE* oneg = fopen(argv[1], "r");
-    assert (oneg);
+    sprintf (buf.data->line_, "");
 
     int counter = 0;
 
     Node* iter = &root;
 
+    for (int i = 0; i < 256; i++)
+        iter -> children[i] = LIST_END_POINTER;
+
     while (!feof(oneg))
         {
+        if (!(counter % 2000))
+        printf ("load %u string\n", counter);
+
         iter -> next = new Node();
-        assert(iter -> next);
+        assert (iter -> next);
+        iter -> next -> level = 0;
+
+        for (int i = 0; i < 256; i++)
+            iter -> next ->children[i] = LIST_END_POINTER;
 
         iter -> next -> data = new line();
         assert(iter -> next -> data );
@@ -41,7 +60,7 @@ int main(int argc, char** argv)
 
         //printf ("%s\n\tlast position[%u]\n", buf.line_, buf.last_symb);
 
-        iter -> next -> data->position  = counter;
+        iter -> next -> data -> position  = counter;
 
         iter = iter -> next;
         iter -> next = LIST_END_POINTER;
@@ -55,50 +74,77 @@ int main(int argc, char** argv)
 
     iter = &root;
 
-    while (iter != LIST_END_POINTER)
-        {
-        printf ("%s\n", iter->data->line_);
+    printf ("start sort.\n");
 
-        iter = iter->next;
-        }
+    clock_t time = clock();
 
-    return 0;
-    /*
-    std :: vector <line> test;
+    sort_tree (&root);
 
-    load_file ("Onegin.txt", test);
+    time = clock() - time;
 
-    //print_arr (test);
+    printf ("Sorted by %lu ms.\n", time);
 
-    size_t time = GetTickCount();
+    FILE* sorted = fopen ("SORTED_TEXT.txt", "w");
 
+    //print_tree (&root, stdout);
 
-    time = GetTickCount() - time;
+    print_tree (&root, sorted);
 
-    printf ("Sort time: %u\n", time);
-    //getch();
-
-    //print_arr (test);
-
-
-    FILE* onegin = fopen("Onegin_SORT_alph.txt", "w");
-
-    print_arr (test, onegin);
-
-    fclose(onegin);
-
-    return 0;*/
+    fclose (sorted);
     }
-
-void print_arr (std :: vector <line> onegin, FILE* file)
+    catch (std::bad_alloc &ex)
     {
-    for (auto str = onegin.begin(); str != onegin.end(); str++)
-        {
-        fprintf(file, "%s\n", str->line_);
-        }
-
-    printf("\n\n\n");
+    printf ("Your problem is out of memory. Be luky next time.\n");
+    }
+    catch (...)
+    {
+    printf ("Huston, we have a problem.\n");
+    }
 
     getch();
+    return 0;
     }
 
+
+//#define DEBUG
+
+void print_tree (Node* root, FILE* file)
+    {
+    assert (root);
+
+    #ifdef DEBUG
+    fprintf (file, "Node[%s]. Level %d.\n\n", root->data->line_, root->level);
+    #else
+    if (root->data->line_ != 0)
+        fprintf (file, "%s\n", root->data->line_);
+    #endif
+
+    if (root -> next)
+        {
+        print_tree(root -> next, file);
+
+        //delete root -> next;
+        }
+
+    for (int i = 0; i < 256; i++)
+        {
+        if (root -> children[i] != LIST_END_POINTER)
+            {
+            print_tree (root -> children[i], file);
+            //delete root -> children[i];
+            }
+        };
+    }
+
+void sort_tree  (Node* root)
+    {
+    assert (root);
+
+    MakeTreeIteration (root);
+
+    for (int i = 0; i < 256; i++)
+        {
+        if (root -> children[i] != LIST_END_POINTER)
+            MakeTreeIteration(root -> children[i]);
+        }
+    }

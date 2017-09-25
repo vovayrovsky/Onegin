@@ -1,8 +1,18 @@
-#include "TXLib.h"
+//#include "C:\program files\codeblocks\MinGW\include\TXLib.h"
 
-//13.09.2017 TODO: Write sort function.
-//           TODO: Write print function.
-//           TODO: Think about crutches.
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <stdint.h>
+#include <io.h>
+#include <new>
+#include <ctime>
+#include <conio.h>
+
+//13.09.2017 TODO: Write sort function.   24.09.2017 +
+//           TODO: Write print function.             +
+//           TODO: Think about crutches.             -
 
 //Defines
 //{
@@ -64,25 +74,22 @@ void MakeTreeIteration (Node* root)
     for (int i = 0; i < 256; i++)
         {
         root -> children[i] = new Node();
-        root -> children[i] -> level = root -> level+1;
+        root -> children[i] -> level = root -> level + 1;
         root -> children[i] -> next  = LIST_END_POINTER;
+        }
 
-        buf = root -> next;
-        pre_buf = root;
+    buf = root -> next;
+    pre_buf = root;
 
-        while (buf != LIST_END_POINTER)
-            {
-            if ((*(buf -> data))[root -> level] == char(i))
-                {
-                pre_buf -> next = buf -> next;
+    while (buf != LIST_END_POINTER)
+        {
+        pre_buf -> next = buf -> next;
 
-                buf -> next = root -> children[i] -> next;
-                root -> children[i] -> next = buf;
-                }
+        buf -> next = root -> children[(*(buf -> data))[root -> level]] -> next;
+        root -> children[(*(buf -> data))[root -> level]] -> next = buf;
 
-            pre_buf = buf;
-            buf = buf -> next;
-            }
+        buf = pre_buf -> next;
+        pre_buf = pre_buf;
         }
 
     if (root -> next != LIST_END_POINTER)   //I have no idea in which case this should work. Well, only if I am stupid.
